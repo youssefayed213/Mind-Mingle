@@ -16,11 +16,12 @@ public class User implements Serializable {
     @Column(name = "idUser")
     private int idUser;
 
-    @Column(name = "NomUser",nullable = false)
-    private String NomUser;
+    @Column(name = "nomUser",nullable = false)
+    private String nomUser;
 
-    @Column(name = "PrenomUser",nullable = false)
-    private String PrenomUser;
+    @Column(name = "prenomUser",nullable = false)
+    private String prenomUser;
+
 
     @Column(name = "email",nullable = false)
     private String email;
@@ -48,8 +49,8 @@ public class User implements Serializable {
 
     public User(int idUser, String nomUser, String prenomUser, String email, String password, LocalDate dateNaiss, String tel, RoleUser role, Long numEtudiant, Long numEnseignant, Long numExpert) {
         this.idUser = idUser;
-        NomUser = nomUser;
-        PrenomUser = prenomUser;
+        this.nomUser = nomUser;
+        this.prenomUser = prenomUser;
         this.email = email;
         this.password = password;
         this.dateNaiss = dateNaiss;
@@ -72,19 +73,19 @@ public class User implements Serializable {
     }
 
     public String getNomUser() {
-        return NomUser;
+        return nomUser;
     }
 
     public void setNomUser(String nomUser) {
-        NomUser = nomUser;
+        nomUser = nomUser;
     }
 
     public String getPrenomUser() {
-        return PrenomUser;
+        return prenomUser;
     }
 
     public void setPrenomUser(String prenomUser) {
-        PrenomUser = prenomUser;
+        prenomUser = prenomUser;
     }
 
     public String getEmail() {

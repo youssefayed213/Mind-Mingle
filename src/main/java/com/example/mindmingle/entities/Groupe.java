@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -65,6 +66,25 @@ public class Groupe implements Serializable {
     public void setDateGr(Date dateGr) {
         this.dateGr = dateGr;
     }
+
+    public String getcategorieGroupe() {
+        return categorieGroupe != null ? categorieGroupe.getNomCatGroupe() : null;
+    }
+
+    public String getCreator() {
+        return creator != null ? creator.getNomUser() + " " + creator.getPrenomUser() : null;
+    }
+    public Set<String> getMembers() {
+        Set<String> memberNames = new HashSet<>();
+        if (members != null) {
+            for (User member : members) {
+                memberNames.add(member.getNomUser() + " " + member.getPrenomUser());
+            }
+        }
+        return memberNames;
+    }
+
+
 
 
     @ManyToOne
