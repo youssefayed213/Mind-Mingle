@@ -53,6 +53,25 @@ public class Message implements Serializable {
         this.createdAt = createdAt;
     }
 
+    // Getters that return only specific fields
+    public String getGroupName() {
+        return groupe.getNom();  // Assuming 'nom' is the field for group name
+    }
+
+    public String getUserName() {
+        return user.getNomUser() + " " + user.getPrenomUser();
+    }
+
+    public void setGroupe(Groupe groupe) {
+        this.groupe = groupe;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
     @ManyToOne
     private Groupe groupe;
+
+    @ManyToOne
+    private User user;
 }

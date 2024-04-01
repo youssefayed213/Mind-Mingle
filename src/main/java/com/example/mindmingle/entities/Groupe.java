@@ -1,6 +1,9 @@
 package com.example.mindmingle.entities;
 
+import com.example.mindmingle.repositories.GroupeRepository;
+import com.example.mindmingle.repositories.UserRepository;
 import jakarta.persistence.*;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,6 +13,7 @@ import java.util.Set;
 @Entity
 @Table(name = "Groupe")
 public class Groupe implements Serializable {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,6 +71,8 @@ public class Groupe implements Serializable {
         this.dateGr = dateGr;
     }
 
+
+
     public String getcategorieGroupe() {
         return categorieGroupe != null ? categorieGroupe.getNomCatGroupe() : null;
     }
@@ -74,6 +80,19 @@ public class Groupe implements Serializable {
     public String getCreator() {
         return creator != null ? creator.getNomUser() + " " + creator.getPrenomUser() : null;
     }
+
+
+
+    public void setCreator(User user) {
+        this.creator = user;
+    }
+    public void setCategorieGroupe(CategorieGroupe categorieGroupe) {
+        this.categorieGroupe = categorieGroupe;
+    }
+    public void setMembers(Set<User> members) {
+        this.members = members;
+    }
+
     public Set<String> getMembers() {
         Set<String> memberNames = new HashSet<>();
         if (members != null) {
@@ -83,9 +102,57 @@ public class Groupe implements Serializable {
         }
         return memberNames;
     }
+    public void addMember(User user) {
+        members.add(user);
+    }
+
+    public void setMessage(Set<User> members) {
+        this.members = members;
+    }
+    public class MessageInfo {
+        private String contenuMsg;
+        private String owner;
+        private Date createdAt;
 
 
 
+        public MessageInfo(String contenuMsg, String owner, Date createdAt) {
+            this.contenuMsg = contenuMsg;
+            this.owner = owner;
+            this.createdAt = createdAt;
+
+
+        }
+
+        // Add getters for the fields
+        public String getContenuMsg() {
+            return contenuMsg;
+        }
+
+        public String getOwner() {
+            return owner;
+        }
+
+
+        public Date getCreatedAt() {
+            return createdAt;
+        }
+    }
+
+    public Set<MessageInfo> getMessages() {
+        Set<MessageInfo> messageInfos = new HashSet<>();
+        if (messages != null) {
+            for (Message message : messages) {
+                String ownerFullName = message.getUserName();
+                messageInfos.add(new MessageInfo(message.getContenuMsg(), ownerFullName, message.getCreatedAt()));
+            }
+        }
+        return messageInfos;
+    }
+    public void removeMessage(Message message) {
+        messages.remove(message);
+        message.setGroupe(null);
+    }
 
     @ManyToOne
     private User creator;
@@ -98,4 +165,6 @@ public class Groupe implements Serializable {
 
     @ManyToMany(mappedBy = "groupesJoined")
     private Set<User> members;
+
+
 }

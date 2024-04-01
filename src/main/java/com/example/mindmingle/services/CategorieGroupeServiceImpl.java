@@ -32,6 +32,7 @@ public class CategorieGroupeServiceImpl implements ICategorieGroupe{
 
     @Override
     public List<CategorieGroupe> retrieveAllCatGr() {
+
         return categorieGroupeRepository.findAll();
     }
 }

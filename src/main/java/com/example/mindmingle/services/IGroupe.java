@@ -10,4 +10,11 @@ public interface IGroupe {
     void removeGroupe(Integer idGroupe);
     public Groupe retrieveGroupe(Integer idGroupe);
     public List<Groupe> retrieveAllGroupe();
+
+    Groupe assignGroupeToCat(int idGroupe, int idCatGroupe);
+     Groupe addMemberToGroupe(int groupId, int userId);
+    Groupe deleteMemberFromGroupe(int groupId, int userId);
+
+
+
 }

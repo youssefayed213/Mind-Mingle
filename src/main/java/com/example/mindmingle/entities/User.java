@@ -147,9 +147,15 @@ public class User implements Serializable {
     public Long getNumExpert() {
         return numExpert;
     }
+    public Set<Groupe> getGroupesJoined() {
+        return groupesJoined;
+    }
 
     public void setNumExpert(Long numExpert) {
         this.numExpert = numExpert;
+    }
+    public void setGroupesJoined(Set<Groupe> groupesJoined) {
+        this.groupesJoined = groupesJoined;
     }
 
 
@@ -160,6 +166,9 @@ public class User implements Serializable {
     private Set<Inscription> inscriptions;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private Set<Message> messages;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private Set<Post> posts;
 
     @OneToMany(mappedBy = "creator",cascade = CascadeType.ALL)
@@ -167,6 +176,7 @@ public class User implements Serializable {
 
     @ManyToMany
     private Set<Groupe> groupesJoined;
+
 
     @OneToMany(mappedBy = "etudiant",cascade = CascadeType.ALL)
     private Set<RendezVous> rendezVousEtudiant;
