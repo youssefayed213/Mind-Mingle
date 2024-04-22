@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+@CrossOrigin
 @RestController
 @AllArgsConstructor
 @RequestMapping("api/Message")
@@ -34,6 +35,11 @@ public class MessageController {
     public ResponseEntity<String>  removemessage(@PathVariable ("idMsg") Integer idMsg){
         messageService.removeMessage(idMsg);
         return ResponseEntity.status(HttpStatus.OK).body("Message deleted successfully.");
+    }
+    @GetMapping("/api/messages/{groupId}")
+    public ResponseEntity<List<Message>> getMessagesByGroupId(@PathVariable int groupId) {
+        List<Message> messages = messageService.findByGroupe_IdGroupe(groupId);
+        return new ResponseEntity<>(messages, HttpStatus.OK);
     }
 
 }

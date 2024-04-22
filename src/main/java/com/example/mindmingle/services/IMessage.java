@@ -11,4 +11,6 @@ public interface IMessage {
     void removeMessage(Integer idMsg);
     public Message retrieveMessage(Integer idMsg);
     public List<Message> retrieveAllMessage();
+
+    List<Message> findByGroupe_IdGroupe(int groupId);
 }

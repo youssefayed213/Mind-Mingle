@@ -76,6 +76,7 @@ public class User implements Serializable {
         return nomUser;
     }
 
+
     public void setNomUser(String nomUser) {
         nomUser = nomUser;
     }
@@ -150,6 +151,8 @@ public class User implements Serializable {
     public Set<Groupe> getGroupesJoined() {
         return groupesJoined;
     }
+
+
 
     public void setNumExpert(Long numExpert) {
         this.numExpert = numExpert;

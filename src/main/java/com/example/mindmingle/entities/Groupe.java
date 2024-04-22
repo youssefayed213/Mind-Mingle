@@ -6,9 +6,7 @@ import jakarta.persistence.*;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "Groupe")
@@ -93,14 +91,15 @@ public class Groupe implements Serializable {
         this.members = members;
     }
 
-    public Set<String> getMembers() {
-        Set<String> memberNames = new HashSet<>();
+    public Map<Integer, String> getMembers() {
+        Map<Integer, String> memberDetails = new HashMap<>();
         if (members != null) {
             for (User member : members) {
-                memberNames.add(member.getNomUser() + " " + member.getPrenomUser());
+                // Assuming getIdUser() returns the user ID
+                memberDetails.put(member.getIdUser(), member.getNomUser() + " " + member.getPrenomUser());
             }
         }
-        return memberNames;
+        return memberDetails;
     }
     public void addMember(User user) {
         members.add(user);
@@ -164,6 +163,7 @@ public class Groupe implements Serializable {
     private Set<Message> messages;
 
     @ManyToMany(mappedBy = "groupesJoined")
+
     private Set<User> members;
 
 
