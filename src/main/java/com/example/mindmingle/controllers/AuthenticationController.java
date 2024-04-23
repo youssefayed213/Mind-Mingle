@@ -3,17 +3,20 @@ package com.example.mindmingle.controllers;
 import com.example.mindmingle.entities.AuthenticationResponse;
 import com.example.mindmingle.entities.User;
 import com.example.mindmingle.services.AuthenticationService;
+import com.example.mindmingle.services.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+    UserServiceImpl userService;
+    PasswordEncoder passwordEncoder;
 
 
     public AuthenticationController(AuthenticationService authenticationService) {
@@ -21,12 +24,26 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@Valid @RequestBody User request){
-        return ResponseEntity.ok(authenticationService.register(request));
+    public ResponseEntity<String> register(@Valid @RequestBody User request){
+        return authenticationService.register(request);
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody User request){
         return ResponseEntity.ok(authenticationService.authenticate(request));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
+        return authenticationService.forgotPassword(email);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody User request) {
+        return authenticationService.resetPassword(request);
+    }
+    @GetMapping("/confirm-account")
+    public ResponseEntity<String> confirmAccount(@RequestParam String token) {
+        return authenticationService.confirmAccount(token);
     }
 }

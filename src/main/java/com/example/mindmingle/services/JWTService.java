@@ -1,6 +1,7 @@
 package com.example.mindmingle.services;
 
 import com.example.mindmingle.entities.User;
+import com.example.mindmingle.repositories.TokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -21,6 +22,12 @@ public class JWTService {
 
     private static final Logger logger = LoggerFactory.getLogger(JWTService.class);
 
+    private final TokenRepository tokenRepository;
+
+    public JWTService(TokenRepository tokenRepository) {
+        this.tokenRepository = tokenRepository;
+    }
+
     public String extractUserName(String token){
         return extractClaim(token, Claims::getSubject);
     }
@@ -30,7 +37,11 @@ public class JWTService {
     }
     public boolean isValid(String token, UserDetails user){
         String userName = extractUserName(token);
-        return (userName.equals(user.getUsername())) && !isTokenExpired(token);
+
+        boolean isValidToken = tokenRepository.findByToken(token)
+                .map(t->!t.isLoggedout()).orElse(false);
+
+        return (userName.equals(user.getUsername())) && !isTokenExpired(token) && isValidToken;
     }
 
     private boolean isTokenExpired(String token) {

@@ -67,6 +67,24 @@ public class User implements UserDetails, Serializable {
     @Column(name = "numExpert",nullable = true,unique = true)
     private Long numExpert;
 
+    @Column(name = "confirmation_token")
+    private String confirmationToken;
+
+    @Column(name = "blocked")
+    private boolean blocked;
+
+    @Column(name = "failed_login_attempts")
+    private int failedLoginAttempts;
+
+    @Lob
+    @Column(name = "imageProfil", columnDefinition = "longblob")
+    private byte[] imageProfil;
+
+    @Column(name = "total_feedback_score")
+    private Double totalFeedbackScore;
+    @Column(name = "total_feedback_submissions")
+    private Integer totalFeedbackSubmissions;
+
     public User(int idUser, String nomUser, String prenomUser, String email, String password, LocalDate dateNaiss, String tel, RoleUser role, Long numEtudiant, Long numEnseignant, Long numExpert) {
         this.idUser = idUser;
         this.nomUser = nomUser;
@@ -145,7 +163,7 @@ public class User implements UserDetails, Serializable {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !blocked;
     }
 
     @Override
@@ -210,6 +228,65 @@ public class User implements UserDetails, Serializable {
         this.numExpert = numExpert;
     }
 
+    public String getConfirmationToken() {
+        return confirmationToken;
+    }
+
+    public void setConfirmationToken(String confirmationToken) {
+        this.confirmationToken = confirmationToken;
+    }
+
+    public boolean isBlocked() {return blocked;}
+
+    public void setBlocked(boolean blocked) {this.blocked = blocked;}
+
+    public int getFailedLoginAttempts() {
+        return failedLoginAttempts;
+    }
+
+    public void setFailedLoginAttempts(int failedLoginAttempts) {
+        this.failedLoginAttempts = failedLoginAttempts;
+    }
+
+    public void incrementFailedLoginAttempts() {
+        this.failedLoginAttempts++;
+    }
+
+    public void resetFailedLoginAttempts() {
+        this.failedLoginAttempts = 0;
+    }
+
+    public byte[] getImageProfil() {
+        return imageProfil;
+    }
+
+    public void setImageProfil(byte[] imageProfil) {
+        this.imageProfil = imageProfil;
+    }
+
+    public Double getTotalFeedbackScore() {
+        return totalFeedbackScore;
+    }
+
+    public void setTotalFeedbackScore(Double totalFeedbackScore) {
+        this.totalFeedbackScore = totalFeedbackScore;
+    }
+
+    public Integer getTotalFeedbackSubmissions() {
+        return totalFeedbackSubmissions;
+    }
+
+    public void setTotalFeedbackSubmissions(Integer totalFeedbackSubmissions) {
+        this.totalFeedbackSubmissions = totalFeedbackSubmissions;
+    }
+
+    public List<Token> getTokens() {
+        return tokens;
+    }
+
+    public void setTokens(List<Token> tokens) {
+        this.tokens = tokens;
+    }
 
     @OneToMany(mappedBy = "expert",cascade = CascadeType.ALL)
     private Set<Evenement> evenements;
@@ -234,4 +311,7 @@ public class User implements UserDetails, Serializable {
 
     @OneToOne
     private ProfilEtudiant profilEtudiant;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<Token> tokens;
 }

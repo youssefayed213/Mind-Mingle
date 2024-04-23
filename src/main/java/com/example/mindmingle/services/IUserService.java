@@ -1,6 +1,8 @@
 package com.example.mindmingle.services;
 
 import com.example.mindmingle.entities.User;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,5 +24,12 @@ public interface IUserService {
 
     List<User> getUsersByFirstNameAndLastName(String firstName, String lastName);
 
-    //Optional<User> getUsersByEmail(String email);
+    User findByEmail(String email);
+
+    User updateUserProfile(User updatedUser, MultipartFile imageFile);
+
+    User findByConfirmationToken(String token);
+
+    void submitFeedbackForExpert(int expertId, Double feedbackScore);
+    //void changePassword(String currentPassword, String newPassword);
 }

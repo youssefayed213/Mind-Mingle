@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -24,9 +25,14 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(UserServiceImpl userService, JwtAuthenticationFilter jwtAuthenticationFilter) {
+    private final CustomLogoutHandler customLogoutHandler;
+
+    public SecurityConfig(UserServiceImpl userService,
+                          JwtAuthenticationFilter jwtAuthenticationFilter,
+                          CustomLogoutHandler customLogoutHandler) {
         this.userService = userService;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.customLogoutHandler = customLogoutHandler;
     }
 
     @Bean
@@ -34,7 +40,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        req->req.requestMatchers("/login/**","/register/**")
+                        req->req.requestMatchers("/login/**","/register/**", "/forgot-password/**","/reset-password/**","/confirm-account/**")
                                 .permitAll()
                                 .requestMatchers("/api/users/**").hasAnyAuthority("Admin")
                                 .anyRequest()
@@ -43,6 +49,11 @@ public class SecurityConfig {
                 .sessionManagement(session->session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(l->l.logoutUrl("/logout")
+                        .addLogoutHandler(customLogoutHandler)
+                        .logoutSuccessHandler(
+                                (request, response, authentication) -> SecurityContextHolder.clearContext()
+                        ))
                 .build();
     }
 
