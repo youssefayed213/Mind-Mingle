@@ -32,4 +32,7 @@ public class CategorieGroupeController {
     public void removeCatGr(@PathVariable ("IdCatGr") Integer IdCatGr){
         catGrService.removeCatGr(IdCatGr);
     }
+
+
+
 }

@@ -183,7 +183,6 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "expert",cascade = CascadeType.ALL)
     private Set<RendezVous> rendezVousExpert;
-
     @OneToOne
     private ProfilEtudiant profilEtudiant;
 }
