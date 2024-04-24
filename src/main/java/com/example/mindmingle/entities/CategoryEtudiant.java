@@ -3,6 +3,7 @@ package com.example.mindmingle.entities;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ public class CategoryEtudiant {
     private String nomCategory;
 
     @OneToMany(mappedBy = "categoryEtudiant", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnore
     private List<Etudiant> etudiants;
 
 

@@ -7,7 +7,9 @@ import com.example.mindmingle.repositories.ExperienceRepository;
 import com.example.mindmingle.repositories.ExpertRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -50,5 +52,19 @@ public class ExpertServiceImpl implements IExpertService{
 
         // Save changes
         expertRepository.save(expert);
+    }
+
+
+    @Override
+    public Expert addExpert(Expert expert, MultipartFile dossierFile) {
+        try {
+            if (dossierFile != null) {
+                expert.setDossierContent(dossierFile.getBytes());
+            }
+            return expertRepository.save(expert);
+        } catch (IOException ex) {
+            // Handle IOException
+            throw new RuntimeException("Failed to save dossier file", ex);
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.mindmingle.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,12 +26,12 @@ public class Etudiant {
 
     @ManyToOne
     @JoinColumn(name = "classe_id")
-    @JsonBackReference
+    @JsonIgnore
     private Classe classe;
 
     @ManyToOne
     @JoinColumn(name = "categorie_id")
-    @JsonBackReference
+    @JsonIgnore
     private CategoryEtudiant categoryEtudiant;
 }
 

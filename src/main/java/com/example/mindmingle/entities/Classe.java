@@ -1,5 +1,6 @@
 package com.example.mindmingle.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,8 @@ public class Classe {
     private Integer niveauClasse;
 
     @OneToMany(mappedBy = "classe", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnore
     private List<Etudiant> etudiants;
+    @ManyToMany(mappedBy = "classeAEnseigner")
+    private List<Enseignant> enseignants;
 }

@@ -24,4 +24,6 @@ public class Expert {
     private List<Experience> experiences;
 
     private String dossier;
+    @Lob
+    private byte[] dossierContent;
 }

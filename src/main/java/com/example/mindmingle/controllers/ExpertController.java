@@ -4,6 +4,7 @@ import com.example.mindmingle.entities.Expert;
 import com.example.mindmingle.services.IExpertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -14,8 +15,9 @@ public class ExpertController {
     private IExpertService expertService;
 
     @PostMapping("/add")
-    public Expert addExpert(@RequestBody Expert expert) {
-        return expertService.addExpert(expert);
+    public Expert addExpert(@RequestPart("expert") Expert expert,
+                            @RequestParam(value = "dossierFile", required = false) MultipartFile dossierFile) {
+        return expertService.addExpert(expert, dossierFile);
     }
 
     @PutMapping("/update")
