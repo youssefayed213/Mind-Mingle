@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.*;
 
 @Entity
@@ -25,12 +26,12 @@ public class Groupe implements Serializable {
     private String description;
 
     @Column(name = "dateGr", nullable = false)
-    private Date dateGr;
+    private LocalDate dateGr;
 
     public Groupe() {
     }
 
-    public Groupe(int idGroupe, String nom, String description, Date dateGr) {
+    public Groupe(int idGroupe, String nom, String description, LocalDate dateGr) {
         this.idGroupe = idGroupe;
         this.nom = nom;
         this.description = description;
@@ -61,11 +62,11 @@ public class Groupe implements Serializable {
         this.description = description;
     }
 
-    public Date getDateGr() {
+    public LocalDate getDateGr() {
         return dateGr;
     }
 
-    public void setDateGr(Date dateGr) {
+    public void setDateGr(LocalDate dateGr) {
         this.dateGr = dateGr;
     }
 

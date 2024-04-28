@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("api/CatGr")
 public class CategorieGroupeController {
-    ICategorieGroupe catGrService; //injection des dépendances
+    ICategorieGroupe catGrService;
     @GetMapping("/getCatGr/{IdCatGr}")
     public CategorieGroupe getCatGr(@PathVariable ("IdCatGr") Integer IdCatGr) {
         return catGrService.retrieveCatGr(IdCatGr);

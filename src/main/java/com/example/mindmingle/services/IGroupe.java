@@ -1,4 +1,6 @@
 package com.example.mindmingle.services;
+import java.time.LocalDate;
+import java.util.Date;
 
 import com.example.mindmingle.entities.Groupe;
 
@@ -21,4 +23,9 @@ public interface IGroupe {
 
 
     List<Object[]> getUsersWithDescriptions();
+
+    int countMembers(int groupId);
+
+    int countMessagesOnDate(int groupId, LocalDate date);
+    int countMessagesBetweenDates(int groupId, LocalDate startDate,LocalDate endDate);
 }

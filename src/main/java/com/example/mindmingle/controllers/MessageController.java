@@ -6,15 +6,19 @@ import com.example.mindmingle.services.IMessage;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 @CrossOrigin
 @RestController
 @AllArgsConstructor
 @RequestMapping("api/Message")
 public class MessageController {
-    IMessage messageService; //injection des dépendances
+    IMessage messageService;
+
     @GetMapping("/getMessage/{idMsg}")
     public Message getMessage(@PathVariable("idMsg") Integer idMsg) {
         return messageService.retrieveMessage(idMsg);
@@ -24,9 +28,11 @@ public class MessageController {
         return messageService.retrieveAllMessage();
     }
     @PostMapping("/addMessage")
-    public  Message addMessage(@RequestBody Message message){
-        return messageService.addMessage(message);
+    public Message addMessage(@RequestBody Message message) {
+        Message savedMessage = messageService.addMessage(message);
+        return savedMessage;
     }
+
     @PutMapping("/updateMessage")
     public Message updateMessage(@RequestBody Message message){
         return messageService.upadateMessage(message);

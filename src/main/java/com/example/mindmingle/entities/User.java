@@ -75,12 +75,9 @@ public class User implements Serializable {
     public String getNomUser() {
         return nomUser;
     }
-
-
     public void setNomUser(String nomUser) {
         nomUser = nomUser;
     }
-
     public String getPrenomUser() {
         return prenomUser;
     }
