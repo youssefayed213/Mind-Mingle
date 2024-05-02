@@ -13,15 +13,20 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.temporal.TemporalAdjusters;
+import java.util.*;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
+
 
 @Service
 @AllArgsConstructor
@@ -54,7 +59,7 @@ public class UserServiceImpl implements UserDetailsService,IUserService {
         return userRepository.save(user);
     }
 
-
+    @Transactional
     public void removeUser(int idU) {
         userRepository.deleteById(idU);
     }
@@ -74,10 +79,41 @@ public class UserServiceImpl implements UserDetailsService,IUserService {
         return userRepository.findByEmail(email).orElse(null);
     }
 
+    public byte[] getImage(String username) throws IOException {
+
+        byte[] img = userRepository.findByUsername(username).get().getImageProfil();
+                decompressBytes(img);
+        return img;
+    }
+    public User getProfile() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        UserDetails userDetails = loadUserByUsername(username);
+
+        if (userDetails instanceof User) {
+            User user = (User) userDetails;
+
+            // Check if the profile image is null
+            if (user.getImageProfil() == null) {
+                user.setImageProfil(new byte[0]);
+            } else {
+                // Decompress the image bytes if needed
+                byte[] compressedImageBytes = user.getImageProfil();
+                byte[] decompressedImageBytes = decompressBytes(compressedImageBytes);
+                user.setImageProfil(decompressedImageBytes);
+            }
+
+            return user;
+        } else {
+            throw new IllegalStateException("User not found");
+        }
+    }
+
     @Override
-    public User updateUserProfile(User updatedUser, MultipartFile imageFile) {
+    public User updateUserProfile(User updatedUser) {
         // Retrieve the username of the authenticated user
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println("username:"+username);
 
         // Find the user entity in the database based on the username
         User existingUser = userRepository.findByUsername(username)
@@ -85,6 +121,20 @@ public class UserServiceImpl implements UserDetailsService,IUserService {
 
         // Update user profile fields
         updateUserFields(existingUser, updatedUser);
+
+        // Save and return the updated user profile
+        return userRepository.save(existingUser);
+    }
+
+    public void uploadProfileImage(MultipartFile imageFile) throws IOException {
+
+        // Retrieve the username of the authenticated user
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println("username:"+username);
+
+        // Find the user entity in the database based on the username
+        User existingUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         // Update profile image if provided
         if (imageFile != null && !imageFile.isEmpty()) {
@@ -95,14 +145,12 @@ public class UserServiceImpl implements UserDetailsService,IUserService {
 
             // Process the image file (e.g., save it to storage)
             try {
-                existingUser.setImageProfil(imageFile.getBytes());
+                existingUser.setImageProfil(compressBytes(imageFile.getBytes()));
+                userRepository.save(existingUser);
             } catch (IOException e) {
                 throw new RuntimeException("Error processing image file", e);
             }
         }
-
-        // Save and return the updated user profile
-        return userRepository.save(existingUser);
     }
     private void updateUserFields(User existingUser, User updatedUser) {
         if (updatedUser.getNomUser() != null && !updatedUser.getNomUser().isBlank()) {
@@ -120,6 +168,7 @@ public class UserServiceImpl implements UserDetailsService,IUserService {
         if (updatedUser.getTel() != null && !updatedUser.getTel().isBlank()) {
             existingUser.setTel(updatedUser.getTel());
         }
+
     }
     private boolean isValidImageType(MultipartFile file) {
         // Get the content type of the file
@@ -184,6 +233,112 @@ public class UserServiceImpl implements UserDetailsService,IUserService {
                 userRepository.save(expert);
             }
         }
+
+
+
+    public Map<String, Object> getRegistrationStats(String timePeriod) {
+        Map<String, Object> registrationStats = new HashMap<>();
+
+        LocalDate startDate;
+        LocalDate endDate = LocalDate.now();
+
+        switch (timePeriod) {
+            case "weekly":
+                startDate = endDate.minusWeeks(1);
+                registrationStats.put("timePeriod", "weekly"); // Indicate the time period
+                registrationStats.put("data", getDataForWeek(startDate, endDate)); // Retrieve data for the week
+                break;
+            case "monthly":
+                startDate = endDate.with(TemporalAdjusters.firstDayOfMonth()).minusMonths(1);
+                registrationStats.put("timePeriod", "monthly"); // Indicate the time period
+                registrationStats.put("data", getDataForMonth(startDate, endDate)); // Retrieve data for the month
+                break;
+            default:
+                // Default to counting registrations for the last week
+                startDate = endDate.minusWeeks(1);
+                registrationStats.put("timePeriod", "weekly"); // Indicate the time period
+                registrationStats.put("data", getDataForWeek(startDate, endDate)); // Retrieve data for the week
+                break;
+        }
+
+        return registrationStats;
+    }
+
+    private Map<Integer, Integer> getDataForWeek(LocalDate startDate, LocalDate endDate) {
+        Map<Integer, Integer> data = new HashMap<>();
+        // Loop through each day of the week and retrieve the number of registrations for that day
+        for (int i = 1; i <= 7; i++) {
+            LocalDate currentDate = startDate.plusDays(i - 1);
+
+            // Calculate the end date by moving to the next day
+            LocalDate nextDay = currentDate.plusDays(1);
+
+            // Count registrations for the current day only
+            int registrations = userRepository.countByRegistrationDateBetween(currentDate, nextDay.minusDays(1)); // Subtract one day from the next day
+            data.put(i, registrations);
+        }
+        return data;
+    }
+
+
+    private Map<Integer, Integer> getDataForMonth(LocalDate startDate, LocalDate endDate) {
+        Map<Integer, Integer> data = new HashMap<>();
+        int daysInMonth = startDate.getMonth().length(false);
+
+        // Loop through each day of the month and retrieve the number of registrations for that day
+        for (int i = 1; i <= daysInMonth; i++) {
+            LocalDate currentDate = startDate.withDayOfMonth(i);
+
+            // Calculate the end date by moving to the next day
+            LocalDate nextDay = currentDate.plusDays(1);
+
+            // Count registrations for the current day only
+            int registrations = userRepository.countByRegistrationDateBetween(currentDate, nextDay.minusDays(1)); // Subtract one day from the next day
+            data.put(i, registrations);
+        }
+        return data;
+    }
+
+    // compress the image bytes before storing it in the database
+    public static byte[] compressBytes(byte[] data) {
+        Deflater deflater = new Deflater();
+        deflater.setInput(data);
+        deflater.finish();
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+        byte[] buffer = new byte[1024];
+        while (!deflater.finished()) {
+            int count = deflater.deflate(buffer);
+            outputStream.write(buffer, 0, count);
+        }
+        try {
+            outputStream.close();
+        } catch (IOException e) {
+        }
+        System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
+
+        return outputStream.toByteArray();
+    }
+
+    // uncompress the image bytes before returning it to the angular application
+    public static byte[] decompressBytes(byte[] data) {
+        Inflater inflater = new Inflater();
+        inflater.setInput(data);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+        byte[] buffer = new byte[1024];
+        try {
+            while (!inflater.finished()) {
+                int count = inflater.inflate(buffer);
+                outputStream.write(buffer, 0, count);
+            }
+            outputStream.close();
+        } catch (IOException ioe) {
+        } catch (DataFormatException e) {
+        }
+        return outputStream.toByteArray();
+    }
+
+
     /*@Override
     public void changePassword(String currentPassword, String newPassword) {
 
@@ -203,4 +358,6 @@ public class UserServiceImpl implements UserDetailsService,IUserService {
 
         userRepository.save(user);
     }*/
+
+
 }

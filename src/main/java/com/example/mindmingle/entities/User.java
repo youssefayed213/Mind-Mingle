@@ -1,5 +1,6 @@
 package com.example.mindmingle.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -32,6 +33,7 @@ public class User implements UserDetails, Serializable {
     @NotBlank(message = "Prenom is mandatory")
     @Column(name = "prenomUser",nullable = false)
     private String prenomUser;
+
 
     @NotBlank(message = "Email is mandatory")
     @Email(message = "Email should be valid")
@@ -85,6 +87,9 @@ public class User implements UserDetails, Serializable {
     @Column(name = "total_feedback_submissions")
     private Integer totalFeedbackSubmissions;
 
+    @Column(name = "registration_date")
+    private LocalDate registrationDate;
+
     public User(int idUser, String nomUser, String prenomUser, String email, String password, LocalDate dateNaiss, String tel, RoleUser role, Long numEtudiant, Long numEnseignant, Long numExpert) {
         this.idUser = idUser;
         this.nomUser = nomUser;
@@ -134,6 +139,7 @@ public class User implements UserDetails, Serializable {
         this.email = email;
     }
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
@@ -280,6 +286,14 @@ public class User implements UserDetails, Serializable {
         this.totalFeedbackSubmissions = totalFeedbackSubmissions;
     }
 
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDate registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
     public List<Token> getTokens() {
         return tokens;
     }
@@ -288,30 +302,31 @@ public class User implements UserDetails, Serializable {
         this.tokens = tokens;
     }
 
-    @OneToMany(mappedBy = "expert",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "expert",cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private Set<Evenement> evenements;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user",cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private Set<Inscription> inscriptions;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user",cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private Set<Post> posts;
 
-    @OneToMany(mappedBy = "creator",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "creator",cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private Set<Groupe> groupesCreated;
 
     @ManyToMany
     private Set<Groupe> groupesJoined;
 
-    @OneToMany(mappedBy = "etudiant",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "etudiant",cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private Set<RendezVous> rendezVousEtudiant;
 
-    @OneToMany(mappedBy = "expert",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "expert",cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private Set<RendezVous> rendezVousExpert;
 
     @OneToOne
     private ProfilEtudiant profilEtudiant;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private List<Token> tokens;
 }

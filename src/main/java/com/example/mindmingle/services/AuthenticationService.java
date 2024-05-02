@@ -6,6 +6,8 @@ import com.example.mindmingle.entities.Token;
 import com.example.mindmingle.entities.User;
 import com.example.mindmingle.repositories.TokenRepository;
 import com.example.mindmingle.repositories.UserRepository;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -16,7 +18,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -65,6 +70,8 @@ public class AuthenticationService {
         user.setDateNaiss(request.getDateNaiss());
         user.setTel(request.getTel());
         user.setRole(request.getRole());
+        user.setRegistrationDate(LocalDate.now());
+
 
         // Determine the role and set the appropriate column value
         switch (request.getRole()) {
@@ -155,18 +162,19 @@ public class AuthenticationService {
 
         // Generate reset token
         String resetToken = jwtService.generateToken(user);
+        revokeAllTokensByUser(user);
+        saveUserToken(resetToken,user);
 
         // Send email with reset link
-        String resetLink = "http://localhost:8085/minds/reset-password?token=" + resetToken;
+        String resetLink = "http://localhost:4200/reset-password?token=" + resetToken;
         // Send email with reset link to user.getEmail()
         mailService.sendResetPasswordEmail(user.getEmail(), resetLink);
 
         return ResponseEntity.ok("Reset password link sent to your email");
     }
 
-    public ResponseEntity<String> resetPassword(User request) {
+    public ResponseEntity<String> resetPassword(String newPassword) {
 
-        String newPassword = request.getPassword();
         if (newPassword == null || newPassword.isEmpty()) {
             return ResponseEntity.badRequest().body("New password cannot be empty");
         }
@@ -175,6 +183,7 @@ public class AuthenticationService {
         }
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println(username);
         // Extract the username from the token
 
         User user = userRepository.findByUsername(username).orElse(null);
@@ -185,6 +194,7 @@ public class AuthenticationService {
         // Update user's password
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+        revokeAllTokensByUser(user);
 
         return ResponseEntity.ok("Password reset successfully");
     }
@@ -202,7 +212,8 @@ public class AuthenticationService {
         // Save the updated user
         userRepository.save(user);
 
-        return ResponseEntity.ok("Account confirmed successfully");
+        // Redirect the user to the login page with a success message
+        return ResponseEntity.status(HttpStatus.FOUND).header(HttpHeaders.LOCATION, "http://localhost:4200/signin?confirmed=true").build();
     }
 
     private void saveUserToken(String jwt, User user){
@@ -223,4 +234,6 @@ public class AuthenticationService {
         }
         tokenRepository.saveAll(validTokenListByUser);
     }
+
+
 }

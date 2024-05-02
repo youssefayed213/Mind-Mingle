@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin("*")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
@@ -34,13 +35,13 @@ public class AuthenticationController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
+    public ResponseEntity<String> forgotPassword(@RequestBody String email) {
         return authenticationService.forgotPassword(email);
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@RequestBody User request) {
-        return authenticationService.resetPassword(request);
+    public ResponseEntity<String> resetPassword(@RequestBody String newPassword) {
+        return authenticationService.resetPassword(newPassword);
     }
     @GetMapping("/confirm-account")
     public ResponseEntity<String> confirmAccount(@RequestParam String token) {

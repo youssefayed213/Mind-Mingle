@@ -16,4 +16,5 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     Optional<User> findByUsername(String username);
     Optional<User> findByConfirmationToken(String token);
 
+    int countByRegistrationDateBetween(LocalDate startDate, LocalDate endDate);
 }

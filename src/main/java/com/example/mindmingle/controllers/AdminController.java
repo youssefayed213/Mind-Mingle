@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RequestMapping("api/users")
+@CrossOrigin("*")
 public class AdminController {
 
    UserServiceImpl userService;
@@ -42,13 +44,15 @@ public class AdminController {
 
     @GetMapping("/getAllUsers")
     public List<User> getAllUsers(){
-        List<User> listUsers = (List<User>)userService.getAllUsers();
+        List<User> listUsers = userService.getAllUsers();
         return listUsers;
     }
 
     @PutMapping("/updateuser")
     public User updateUser(@Valid @RequestBody User user){
-        if (user.getPassword() != null) {
+        User existingUser = userService.getUserById(user.getIdUser());
+
+        if (user.getPassword() != null && !user.getPassword().equals(existingUser.getPassword())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         return userService.updateUser(user);
@@ -67,5 +71,11 @@ public class AdminController {
     @GetMapping("/userByPrenomEtNom/{prenom}/{nom}")
     public List<User> userByNames(@PathVariable String prenom, @PathVariable String nom){
         return userService.getUsersByFirstNameAndLastName(prenom,nom);
+    }
+
+    @GetMapping("/registration-stats")
+    public ResponseEntity<Map<String, Object>> getRegistrationStats(@RequestParam String timePeriod) {
+        Map<String, Object> registrationStats = userService.getRegistrationStats(timePeriod);
+        return ResponseEntity.ok(registrationStats);
     }
 }

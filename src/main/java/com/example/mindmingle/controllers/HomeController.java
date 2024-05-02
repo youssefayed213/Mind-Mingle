@@ -1,11 +1,13 @@
 package com.example.mindmingle.controllers;
 
 import com.example.mindmingle.entities.User;
+import com.example.mindmingle.repositories.UserRepository;
 import com.example.mindmingle.services.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,16 +17,22 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 
 @RestController
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RequestMapping("api/home")
+@CrossOrigin("*")
 public class HomeController {
 
     private final UserServiceImpl userService;
+    UserRepository userRepository;
     @GetMapping("/welcome")
     public ResponseEntity<String> home() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -51,32 +59,34 @@ public class HomeController {
 
     @GetMapping("/profile")
     public ResponseEntity<User> getProfile() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-        UserDetails user = userService.loadUserByUsername(username);
-        return ResponseEntity.ok((User) user);
+        try {
+            User user = userService.getProfile();
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
     @PutMapping("/profile")
-    public ResponseEntity<String> updateProfile(@RequestPart(value = "imageProfil", required = false) MultipartFile imageFile,
-                                                @RequestPart("updatedUser") User updatedUser,
-                                                BindingResult bindingResult) {
+    public ResponseEntity<String> updateProfile(@RequestBody User updatedUser) {
         try {
-            // Check for validation errors
-            if (bindingResult.hasErrors()) {
-                // Handle validation errors
-                return ResponseEntity.badRequest().body("Validation errors occurred: " + bindingResult.getAllErrors());
-            }
-
-            // Update the user profile
-            userService.updateUserProfile(updatedUser, imageFile);
-
+            userService.updateUserProfile(updatedUser);
             return ResponseEntity.ok("Profile updated successfully");
         } catch (IllegalArgumentException e) {
-            // Handle exceptions thrown by the service
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
+    @PostMapping("/uploadImageProfile")
+    public ResponseEntity<String> uploadProfileImage(@RequestParam("imageFile") MultipartFile imageFile) {
+        try {
+            userService.uploadProfileImage(imageFile);
+            return ResponseEntity.ok("Profile image uploaded successfully");
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().body("Error uploading profile image: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
     @PostMapping("/submitFeedBack")
     public ResponseEntity<String> submitFeedback(@RequestParam int expertId, @RequestParam double feedbackScore) {
@@ -87,6 +97,8 @@ public class HomeController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+
 
   /*  @PutMapping("/profile/change-password")
     public ResponseEntity<String> changePassword(@RequestParam String currentPassword,@RequestParam String newPassword) {

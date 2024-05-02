@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface IUserService {
@@ -26,10 +27,14 @@ public interface IUserService {
 
     User findByEmail(String email);
 
-    User updateUserProfile(User updatedUser, MultipartFile imageFile);
+    User updateUserProfile(User updatedUser);
 
     User findByConfirmationToken(String token);
 
     void submitFeedbackForExpert(int expertId, Double feedbackScore);
+
+    User getProfile();
+
+   // Map<String, Integer> getRegistrationStats(String timePeriod);
     //void changePassword(String currentPassword, String newPassword);
 }
