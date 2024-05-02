@@ -1,5 +1,6 @@
 package com.example.mindmingle.entities;
 
+
 import com.example.mindmingle.repositories.GroupeRepository;
 import com.example.mindmingle.repositories.UserRepository;
 import jakarta.persistence.*;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
+
 
 @Entity
 @Table(name = "Groupe")
@@ -26,12 +28,16 @@ public class Groupe implements Serializable {
     private String description;
 
     @Column(name = "dateGr", nullable = false)
+
     private LocalDate dateGr;
+
 
     public Groupe() {
     }
 
+
     public Groupe(int idGroupe, String nom, String description, LocalDate dateGr) {
+
         this.idGroupe = idGroupe;
         this.nom = nom;
         this.description = description;
@@ -62,13 +68,16 @@ public class Groupe implements Serializable {
         this.description = description;
     }
 
+
     public LocalDate getDateGr() {
         return dateGr;
     }
 
     public void setDateGr(LocalDate dateGr) {
+
         this.dateGr = dateGr;
     }
+
 
 
 
@@ -154,6 +163,7 @@ public class Groupe implements Serializable {
         message.setGroupe(null);
     }
 
+
     @ManyToOne
     private User creator;
 
@@ -165,7 +175,9 @@ public class Groupe implements Serializable {
 
     @ManyToMany(mappedBy = "groupesJoined")
 
+
     private Set<User> members;
+
 
 
 }

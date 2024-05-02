@@ -53,6 +53,7 @@ public class Message implements Serializable {
         this.createdAt = createdAt;
     }
 
+
     public String getGroupName() {
         return groupe.getNom();  // Assuming 'nom' is the field for group name
     }
@@ -83,4 +84,5 @@ public class Message implements Serializable {
 
     @ManyToOne
     private User user;
+
 }

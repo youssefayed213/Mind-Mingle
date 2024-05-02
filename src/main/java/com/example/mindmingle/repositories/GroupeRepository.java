@@ -14,8 +14,9 @@ import java.util.Set;
 @Repository
 public interface GroupeRepository extends JpaRepository<Groupe,Integer> {
     Groupe findByIdGroupe(Integer IdGroupe);
-    @Query("SELECT DISTINCT g FROM Groupe g JOIN FETCH g.members WHERE g.id = :groupId")
+    @Query("SELECT DISTINCT g FROM Groupe g JOIN FETCH g.members WHERE g.idGroupe = :groupId")
     List<Groupe> findGroupsWithMembersById(Integer groupId);
+
 
 
 }
