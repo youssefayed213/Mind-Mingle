@@ -17,6 +17,10 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     @Query("SELECT u.idUser, p.description FROM User u JOIN u.profilEtudiant p")
     List<Object[]> getUsersWithDescriptions();
     List<User> findByPrenomUserAndNomUser(String firstName, String lastName);
+
+    List<User> findByPrenomUser(String firstName);
+
+    List<User> findByNomUser(String lastName);
     Optional<User> findByEmail(String email);
     Optional<User> findByUsername(String username);
     Optional<User> findByConfirmationToken(String token);

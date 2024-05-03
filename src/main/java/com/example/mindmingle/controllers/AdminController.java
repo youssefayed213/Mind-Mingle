@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +34,9 @@ public class AdminController {
 
     @PostMapping("/adduser")
     public User addUser(@Valid @RequestBody User user){
+        String password = user.getPassword();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userService.addUser(user);
+        return userService.addUser(user,password);
     }
 
     @GetMapping("/getUserById/{userId}")
@@ -66,6 +68,16 @@ public class AdminController {
     @GetMapping("/userByDate/{date}")
     public List<User> userByDate(@PathVariable LocalDate date){
         return userService.getUsersByBirthDate(date);
+    }
+
+    @GetMapping("/userByPrenom/{prenom}")
+    public List<User> userByPrenom(@PathVariable String prenom){
+        return userService.getUserByPrenom(prenom);
+    }
+
+    @GetMapping("/userByNom/{nom}")
+    public List<User> userByNom(@PathVariable String nom){
+        return userService.getUserByNom(nom);
     }
 
     @GetMapping("/userByPrenomEtNom/{prenom}/{nom}")

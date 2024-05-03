@@ -3,6 +3,7 @@ package com.example.mindmingle.controllers;
 import com.example.mindmingle.entities.AuthenticationResponse;
 import com.example.mindmingle.entities.User;
 import com.example.mindmingle.services.AuthenticationService;
+import com.example.mindmingle.services.JWTService;
 import com.example.mindmingle.services.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,8 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     UserServiceImpl userService;
     PasswordEncoder passwordEncoder;
+
+
 
 
     public AuthenticationController(AuthenticationService authenticationService) {
@@ -47,4 +50,8 @@ public class AuthenticationController {
     public ResponseEntity<String> confirmAccount(@RequestParam String token) {
         return authenticationService.confirmAccount(token);
     }
+
+
+
+
 }
