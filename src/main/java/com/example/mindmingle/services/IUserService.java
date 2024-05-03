@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface IUserService {
 
-    User addUser(User user);
+    User addUser(User user, String password);
 
     User getUserById(int idU);
 

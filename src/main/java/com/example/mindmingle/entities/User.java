@@ -1,5 +1,6 @@
 package com.example.mindmingle.entities;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -18,7 +19,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "User")
+
 public class User implements UserDetails, Serializable {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,13 +29,15 @@ public class User implements UserDetails, Serializable {
     private int idUser;
 
 
+
     @NotBlank(message = "Nom is mandatory")
     @Column(name = "nomUser",nullable = false)
     private String nomUser;
-
     @NotBlank(message = "Prenom is mandatory")
+
     @Column(name = "prenomUser",nullable = false)
     private String prenomUser;
+
 
 
     @NotBlank(message = "Email is mandatory")
@@ -59,6 +64,7 @@ public class User implements UserDetails, Serializable {
 
     @Enumerated(EnumType.STRING)
     private RoleUser role;
+
 
     @Column(name = "numEtudiant",nullable = true,unique = true)
     private Long numEtudiant;
@@ -90,6 +96,7 @@ public class User implements UserDetails, Serializable {
     @Column(name = "registration_date")
     private LocalDate registrationDate;
 
+
     public User(int idUser, String nomUser, String prenomUser, String email, String password, LocalDate dateNaiss, String tel, RoleUser role, Long numEtudiant, Long numEnseignant, Long numExpert) {
         this.idUser = idUser;
         this.nomUser = nomUser;
@@ -119,6 +126,7 @@ public class User implements UserDetails, Serializable {
         return nomUser;
     }
 
+
     public void setNomUser(String nomUser) {
         this.nomUser = nomUser;
     }
@@ -139,6 +147,7 @@ public class User implements UserDetails, Serializable {
         this.email = email;
     }
 
+
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -148,6 +157,7 @@ public class User implements UserDetails, Serializable {
     public String getPassword() {
         return password;
     }
+
 
     @Override
     public String getUsername() {
@@ -181,6 +191,7 @@ public class User implements UserDetails, Serializable {
     public boolean isEnabled() {
         return true;
     }
+
 
     public void setPassword(String password) {
         this.password = password;
@@ -230,9 +241,22 @@ public class User implements UserDetails, Serializable {
         return numExpert;
     }
 
+    public Set<Groupe> getGroupesJoined() {
+        return groupesJoined;
+    }
+
+
+
+
     public void setNumExpert(Long numExpert) {
         this.numExpert = numExpert;
     }
+
+    public void setGroupesJoined(Set<Groupe> groupesJoined) {
+        this.groupesJoined = groupesJoined;
+    }
+
+
 
     public String getConfirmationToken() {
         return confirmationToken;
@@ -313,20 +337,29 @@ public class User implements UserDetails, Serializable {
 
     @OneToMany(mappedBy = "creator",cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private Set<Groupe> groupesCreated;
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private Set<Message> messages;
+
+
 
     @ManyToMany
     private Set<Groupe> groupesJoined;
+
+
 
     @OneToMany(mappedBy = "etudiant",cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private Set<RendezVous> rendezVousEtudiant;
 
     @OneToMany(mappedBy = "expert",cascade = {CascadeType.ALL, CascadeType.REMOVE})
+
     private Set<RendezVous> rendezVousExpert;
 
     @OneToOne
     private ProfilEtudiant profilEtudiant;
 
+
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private List<Token> tokens;
+
 }

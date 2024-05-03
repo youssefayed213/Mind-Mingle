@@ -23,11 +23,20 @@ public class MailService {
         emailSender.send(message);
     }
 
-    public void sendConfirmationEmail(String to, String confirmationLink) {
+    public  void sendConfirmationEmail(String to, String confirmationLink, String username, String password) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject("Account Confirmation Request");
-        message.setText("Welcome to MindMingle! Please confirm your account by clicking on the following link: " + confirmationLink);
+
+        StringBuilder emailBody = new StringBuilder();
+        emailBody.append("Welcome to MindMingle! Please confirm your account by clicking on the following link: ");
+        emailBody.append(confirmationLink);
+        emailBody.append("\nUsername: ").append(username);
+        emailBody.append("\nPassword: ").append(password);
+
+        // Set the concatenated message as the email body
+        message.setText(emailBody.toString());
+
         emailSender.send(message);
     }
 

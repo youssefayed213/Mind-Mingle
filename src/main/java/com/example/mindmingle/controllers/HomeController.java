@@ -1,7 +1,9 @@
 package com.example.mindmingle.controllers;
 
 import com.example.mindmingle.entities.User;
+import com.example.mindmingle.filter.JwtAuthenticationFilter;
 import com.example.mindmingle.repositories.UserRepository;
+import com.example.mindmingle.services.JWTService;
 import com.example.mindmingle.services.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -32,7 +34,9 @@ import java.util.zip.Inflater;
 public class HomeController {
 
     private final UserServiceImpl userService;
+    private final JWTService jwtService;
     UserRepository userRepository;
+
     @GetMapping("/welcome")
     public ResponseEntity<String> home() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -97,6 +101,8 @@ public class HomeController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+
 
 
 

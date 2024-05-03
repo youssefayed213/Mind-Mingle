@@ -15,10 +15,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-
+@CrossOrigin("*")
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -64,6 +65,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                SecurityContextHolder.getContext().setAuthentication(authToken);
            }
         }
+        response.addHeader("token", token);
+        response.addHeader("userId", userService.loadUserByUsername(userName).getUsername());
         filterChain.doFilter(request,response);
     }
+
+
 }

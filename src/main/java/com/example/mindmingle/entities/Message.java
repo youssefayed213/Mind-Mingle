@@ -53,6 +53,36 @@ public class Message implements Serializable {
         this.createdAt = createdAt;
     }
 
+
+    public String getGroupName() {
+        return groupe.getNom();  // Assuming 'nom' is the field for group name
+    }
+
+    public Number getIdGroup() {
+        return groupe.getIdGroupe();  // Assuming 'nom' is the field for group name
+    }
+
+    public String getUserName() {
+        return user.getNomUser() + " " + user.getPrenomUser();
+    }
+    public Number getIdUser() {
+        return user.getIdUser();
+    }
+
+    public Groupe getGroupe() {
+        return groupe;
+    }
+    public void setGroupe(Groupe groupe) {
+        this.groupe = groupe;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
     @ManyToOne
     private Groupe groupe;
+
+    @ManyToOne
+    private User user;
+
 }

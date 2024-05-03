@@ -36,11 +36,11 @@ public class UserServiceImpl implements UserDetailsService,IUserService {
     MailService mailService;
     //private final PasswordEncoder passwordEncoder;
 
-    public User addUser(User user) {
+    public User addUser(User user,String password) {
         String confirmationToken = UUID.randomUUID().toString();
         user.setConfirmationToken(confirmationToken);
         String confirmationLink = "http://localhost:8085/minds/confirm-account?token=" + confirmationToken;
-        mailService.sendConfirmationEmail(user.getEmail(), confirmationLink);
+        mailService.sendConfirmationEmail(user.getEmail(), confirmationLink,user.getUsername(),password);
 
         return userRepository.save(user);
     }
@@ -64,11 +64,16 @@ public class UserServiceImpl implements UserDetailsService,IUserService {
         userRepository.deleteById(idU);
     }
 
+    public List<User> getUserByPrenom(String firstName) {
+        return userRepository.findByPrenomUser(firstName);
+    }
 
+    public List<User> getUserByNom(String lastname) {
+        return userRepository.findByNomUser(lastname);
+    }
     public List<User> getUsersByBirthDate(LocalDate date) {
         return userRepository.findByDateNaiss(date);
     }
-
 
     public List<User> getUsersByFirstNameAndLastName(String firstName, String lastName) {
         return userRepository.findByPrenomUserAndNomUser(firstName, lastName);

@@ -42,6 +42,8 @@ public class AuthenticationService {
 
     private final TokenRepository tokenRepository;
 
+    private String usernameOfToken;
+
     public AuthenticationService(UserRepository userRepository, UserServiceImpl userService, PasswordEncoder passwordEncoder, JWTService jwtService, AuthenticationManager authenticationManager, MailService mailService, TwilioSMSService smsService, TokenRepository tokenRepository) {
         this.userRepository = userRepository;
         this.userService = userService;
@@ -66,6 +68,7 @@ public class AuthenticationService {
         user.setPrenomUser(request.getPrenomUser());
         user.setEmail(request.getEmail());
         user.setUsername(request.getUsername());
+        String password = request.getPassword();
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setDateNaiss(request.getDateNaiss());
         user.setTel(request.getTel());
@@ -99,7 +102,7 @@ public class AuthenticationService {
 
         // Send confirmation email
         String confirmationLink = "http://localhost:8085/minds/confirm-account?token=" + confirmationToken;
-        mailService.sendConfirmationEmail(user.getEmail(), confirmationLink);
+        mailService.sendConfirmationEmail(user.getEmail(), confirmationLink,user.getUsername(),password);
 
         // Return the authentication response with JWT token
         return ResponseEntity.ok("Confirm Account link sent to your email");
@@ -129,12 +132,14 @@ public class AuthenticationService {
 
             // Generate JWT token
             String token = jwtService.generateToken(user);
+            System.out.println("yyyyyy: "+jwtService.extractUserName(token));
+            usernameOfToken = jwtService.extractUserName(token);
 
             revokeAllTokensByUser(user);
 
             saveUserToken(token,user);
 
-            return new AuthenticationResponse(token);
+            return new AuthenticationResponse(token, usernameOfToken);
         } catch (AuthenticationException e) {
             // Authentication failed
             User user = userRepository.findByUsername(request.getUsername()).orElseThrow(
