@@ -60,7 +60,10 @@ public class HomeController {
                 return "Hello from unknown user";
         }
     }
-
+    @GetMapping("/findByUsername/{username}")
+    public Optional<User> userByNom(@PathVariable String username){
+        return userService.findByUsername(username);
+    }
     @GetMapping("/profile")
     public ResponseEntity<User> getProfile() {
         try {
