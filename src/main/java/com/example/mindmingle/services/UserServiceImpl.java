@@ -67,7 +67,9 @@ public class UserServiceImpl implements UserDetailsService,IUserService {
     public List<User> getUserByPrenom(String firstName) {
         return userRepository.findByPrenomUser(firstName);
     }
-
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
     public List<User> getUserByNom(String lastname) {
         return userRepository.findByNomUser(lastname);
     }
