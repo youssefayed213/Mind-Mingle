@@ -23,6 +23,14 @@ public class Etudiant {
     private float point;
     private String description;
     private String dossier;
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
+
+    private byte[] dossierContent;
+
+    @Lob
+    private byte[] picture;
+
 
     @ManyToOne
     @JoinColumn(name = "classe_id")
@@ -33,5 +41,6 @@ public class Etudiant {
     @JoinColumn(name = "categorie_id")
     @JsonIgnore
     private CategoryEtudiant categoryEtudiant;
+
 }
 

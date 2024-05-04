@@ -5,6 +5,7 @@ import com.example.mindmingle.entities.Etudiant;
 import com.example.mindmingle.services.IEtudiantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -51,5 +52,11 @@ public class EtudiantController {
     public void assignEtudiantToCategory(@PathVariable Integer idEtudiant, @PathVariable Integer idCategoryEtudiant) {
         etudiantService.assignEtudiantToCategory(idEtudiant, idCategoryEtudiant);
     }
+    @PostMapping("/ajouter")
+    public Etudiant addEtudiant(@RequestPart("etudiant") Etudiant etudiant,
+                              @RequestParam(value = "dossierFile", required = false) MultipartFile dossierFile,
+                              @RequestParam(value = "picture", required = false) MultipartFile picture) {
+        return etudiantService.ajouterEtudiant(etudiant, dossierFile,picture);
+}
 
 }

@@ -8,11 +8,13 @@ import com.example.mindmingle.repositories.ClasseRepository;
 import com.example.mindmingle.repositories.EtudiantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
-public class IEtudiantServiceImpl implements IEtudiantService{
+public class IEtudiantServiceImpl implements IEtudiantService {
 
     @Autowired
     private EtudiantRepository etudiantRepository;
@@ -67,5 +69,19 @@ public class IEtudiantServiceImpl implements IEtudiantService{
                 .orElseThrow(() -> new IllegalArgumentException("CategoryEtudiant not found"));
         etudiant.setCategoryEtudiant(categoryEtudiant);
         etudiantRepository.save(etudiant);
+    }
+
+    @Override
+    public Etudiant ajouterEtudiant(Etudiant etudiant, MultipartFile dossierFile, MultipartFile picture) {
+        try {
+            if (dossierFile != null && picture != null) {
+                etudiant.setDossierContent(dossierFile.getBytes());
+                etudiant.setPicture(picture.getBytes());
+            }
+            return etudiantRepository.save(etudiant);
+        } catch (IOException ex) {
+            // Handle IOException
+            throw new RuntimeException("Failed to save dossier file", ex);
+        }
     }
 }
