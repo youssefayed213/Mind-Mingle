@@ -1,4 +1,5 @@
 package com.example.mindmingle.controllers;
+import java.util.Optional;
 
 import com.example.mindmingle.entities.User;
 import com.example.mindmingle.filter.JwtAuthenticationFilter;
