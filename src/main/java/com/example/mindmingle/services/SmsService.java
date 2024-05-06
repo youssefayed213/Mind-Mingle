@@ -1,4 +1,4 @@
-package com.example.mindmingle.service;
+package com.example.mindmingle.services;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;

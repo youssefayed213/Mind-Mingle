@@ -1,4 +1,4 @@
-package com.example.mindmingle.service;
+package com.example.mindmingle.services;
 
 import com.example.mindmingle.controller.MeetQuickstartController;
 import com.example.mindmingle.entities.*;
@@ -152,7 +152,7 @@ public String registerUserToEvent(Integer eventId, Integer userId) throws Except
     private void sendConfirmationEmail(User user, Evenement event, String subject, String messageBody) {
         // Example implementation for sending email
         String emailBody = "Dear " + user.getNomUser() + ",\n\n" + messageBody + "\n\nThank you.";
-        MailService.sendEmail(user.getEmail(), subject, emailBody);
+        MailService1.sendEmail(user.getEmail(), subject, emailBody);
     }
 
 

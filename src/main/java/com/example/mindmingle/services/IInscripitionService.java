@@ -1,4 +1,4 @@
-package com.example.mindmingle.service;
+package com.example.mindmingle.services;
 
 import com.example.mindmingle.entities.Inscription;
 

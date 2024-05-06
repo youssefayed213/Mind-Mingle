@@ -55,7 +55,5 @@ public class Token {
     @JoinColumn(name = "idUser")
     private User user;
 
-
-
-
 }
+

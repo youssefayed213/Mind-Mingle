@@ -9,16 +9,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Table(name = "Evenement")
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class Evenement implements Serializable {
 
     @Id
@@ -35,12 +38,14 @@ public class Evenement implements Serializable {
     @Column(name = "dateEvent", nullable = false)
     private Date dateEvent;
 
+
     @Enumerated(EnumType.STRING)
     private Thematique thematique;
 
 
     @Column(name = "lieu", nullable = false)
     private String lieu;
+
     @Enumerated(EnumType.STRING)
     private TypeEvenement typeEvenement;
 
@@ -64,7 +69,6 @@ public class Evenement implements Serializable {
     }
     @Column(name = "meetingLink")
     private String meetingLink;
-
 
 
 

@@ -1,9 +1,7 @@
 package com.example.mindmingle.controller;
 
 import com.example.mindmingle.entities.Evenement;
-import com.example.mindmingle.entities.User;
-import com.example.mindmingle.service.IEvenemntService;
-import com.example.mindmingle.service.SmsService;
+import com.example.mindmingle.services.IEvenemntService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

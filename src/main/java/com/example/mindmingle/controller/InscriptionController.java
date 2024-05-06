@@ -1,7 +1,7 @@
 package com.example.mindmingle.controller;
 
 import com.example.mindmingle.entities.Inscription;
-import com.example.mindmingle.service.IInscripitionService;
+import com.example.mindmingle.services.IInscripitionService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

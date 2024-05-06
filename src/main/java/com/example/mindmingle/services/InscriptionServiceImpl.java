@@ -1,10 +1,9 @@
-package com.example.mindmingle.service;
+package com.example.mindmingle.services;
 
 import com.example.mindmingle.entities.*;
 import com.example.mindmingle.repositories.EvenementRepository;
 import com.example.mindmingle.repositories.InscriptionRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,7 +59,7 @@ public class InscriptionServiceImpl implements IInscripitionService {
             body = "Event details: " + event.getDescription();
         }
 
-        MailService.sendEmail(recipientEmail, subject, body);
+        MailService1.sendEmail(recipientEmail, subject, body);
     }
 
 
