@@ -180,7 +180,7 @@ public class Groupe implements Serializable {
     @OneToMany(mappedBy = "groupe",cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private Set<Message> messages;
 
-    @ManyToMany(mappedBy = "groupesJoined",cascade = {CascadeType.ALL, CascadeType.REMOVE})
+    @ManyToMany(mappedBy = "groupesJoined")
     private Set<User> members;
 
 
