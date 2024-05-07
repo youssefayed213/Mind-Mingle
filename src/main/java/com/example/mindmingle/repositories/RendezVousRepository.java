@@ -17,4 +17,5 @@ public interface RendezVousRepository extends JpaRepository<RendezVous,Integer> 
 
     RendezVous findByEtudiantIdUserAndIdRdv(Integer etudiantId, Integer idRdv);
 
+
 }

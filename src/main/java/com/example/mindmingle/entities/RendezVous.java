@@ -3,6 +3,7 @@ package com.example.mindmingle.entities;
 import jakarta.persistence.*;
 import org.hibernate.engine.internal.Cascade;
 
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
@@ -16,7 +17,6 @@ public class RendezVous implements Serializable {
     @Column(name = "idRdv")
     private int idRdv;
 
-
     @Column(name = "dateRdv",nullable = false)
     private Date dateRdv;
 
@@ -26,7 +26,6 @@ public class RendezVous implements Serializable {
 
     @Column(name = "lieu")
     private String lieu;
-
 
 
     public RendezVous() {
@@ -118,4 +117,5 @@ public class RendezVous implements Serializable {
     public String toString() {
         return String.valueOf(idRdv);
     }
+
 }
