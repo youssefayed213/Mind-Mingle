@@ -1,11 +1,17 @@
 package com.example.mindmingle.entities;
 
+
+
+import com.example.mindmingle.repositories.GroupeRepository;
+import com.example.mindmingle.repositories.UserRepository;
 import jakarta.persistence.*;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+
+import java.time.LocalDate;
+import java.util.*;
+
 
 @Entity
 @Table(name = "Groupe")
@@ -24,12 +30,20 @@ public class Groupe implements Serializable {
     private String description;
 
     @Column(name = "dateGr", nullable = false)
-    private Date dateGr;
+
+
+
+
+    private LocalDate dateGr;
+
 
     public Groupe() {
     }
 
-    public Groupe(int idGroupe, String nom, String description, Date dateGr) {
+
+
+    public Groupe(int idGroupe, String nom, String description, LocalDate dateGr) {
+
         this.idGroupe = idGroupe;
         this.nom = nom;
         this.description = description;
@@ -60,14 +74,17 @@ public class Groupe implements Serializable {
         this.description = description;
     }
 
-    public Date getDateGr() {
+
+
+
+    public LocalDate getDateGr() {
         return dateGr;
     }
 
-    public void setDateGr(Date dateGr) {
+    public void setDateGr(LocalDate dateGr) {
+
         this.dateGr = dateGr;
     }
-
 
 
     public String getcategorieGroupe() {
@@ -90,14 +107,17 @@ public class Groupe implements Serializable {
         this.members = members;
     }
 
-    public Set<String> getMembers() {
-        Set<String> memberNames = new HashSet<>();
+
+    public Map<Integer, String> getMembers() {
+        Map<Integer, String> memberDetails = new HashMap<>();
         if (members != null) {
             for (User member : members) {
-                memberNames.add(member.getNomUser() + " " + member.getPrenomUser());
+                // Assuming getIdUser() returns the user ID
+                memberDetails.put(member.getIdUser(), member.getNomUser() + " " + member.getPrenomUser());
             }
         }
-        return memberNames;
+        return memberDetails;
+
     }
     public void addMember(User user) {
         members.add(user);
@@ -161,6 +181,7 @@ public class Groupe implements Serializable {
     private Set<Message> messages;
 
     @ManyToMany(mappedBy = "groupesJoined")
+
     private Set<User> members;
 
 

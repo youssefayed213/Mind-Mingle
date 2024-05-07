@@ -2,6 +2,7 @@ package com.example.mindmingle.entities;
 
 import jakarta.persistence.*;
 
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
@@ -25,6 +26,7 @@ public class RendezVous implements Serializable {
     @Column(name = "lieu")
     private String lieu;
 
+
     public RendezVous() {
     }
 
@@ -33,6 +35,7 @@ public class RendezVous implements Serializable {
         this.dateRdv = dateRdv;
         this.typeRdv = typeRdv;
         this.lieu = lieu;
+
     }
 
     public int getIdRdv() {
@@ -67,9 +70,53 @@ public class RendezVous implements Serializable {
         this.lieu = lieu;
     }
 
+    public User getEtudiant() {
+        return etudiant;
+    }
+
+    public void setEtudiant(User etudiant) {
+        this.etudiant = etudiant;
+    }
+
+    public User getExpert() {
+        return expert;
+    }
+
+    public void setExpert(User expert) {
+        this.expert = expert;
+    }
+    public Feedback getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(Feedback feedback) {
+        this.feedback = feedback;
+    }
+
+    public int getUserIdFromEtudiant() {
+        return etudiant!= null? etudiant.getIdUser() : -1; // Retourne -1 ou une valeur par défaut si etudiant est null
+    }
+
+    public int getUserIdFromExpert() {
+        return expert!= null? expert.getIdUser() : -1; // Retourne -1 ou une valeur par défaut si expert est null
+    }
     @ManyToOne
-    private User etudiant;
+    @JoinColumn(name = "etudiant_id", referencedColumnName = "idUser") // Remplacez 'etudiant_id' par le nom de la colonne dans la table RendezVous faisant référence à l'ID de l'étudiant
+    public User etudiant;
 
     @ManyToOne
-    private User expert;
+    @JoinColumn(name = "expert_id", referencedColumnName = "idUser")
+    public User expert;
+
+
+
+    @OneToOne (cascade = CascadeType.REMOVE)
+    private Feedback feedback;
+
+    @Override
+    public String toString() {
+        return String.valueOf(idRdv);
+    }
+
+
 }

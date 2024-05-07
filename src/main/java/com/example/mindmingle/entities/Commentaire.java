@@ -1,6 +1,8 @@
 package com.example.mindmingle.entities;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import org.w3c.dom.Text;
 
@@ -80,6 +82,5 @@ public class Commentaire implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
-
 
 }

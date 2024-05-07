@@ -1,12 +1,25 @@
 package com.example.mindmingle.entities;
 
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "Inscription")
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+
 public class Inscription implements Serializable {
 
     @Id
@@ -20,41 +33,14 @@ public class Inscription implements Serializable {
     @Enumerated(EnumType.STRING)
     private StatutInscription statutInscription;
 
-    public Inscription() {
-    }
 
-    public Inscription(int idInscription, Date dateInscription, StatutInscription statutInscription) {
-        this.idInscription = idInscription;
-        this.dateInscription = dateInscription;
-        this.statutInscription = statutInscription;
-    }
 
-    public int getIdInscription() {
-        return idInscription;
-    }
-
-    public void setIdInscription(int idInscription) {
-        this.idInscription = idInscription;
-    }
-
-    public Date getDateInscription() {
-        return dateInscription;
-    }
-
-    public void setDateInscription(Date dateInscription) {
-        this.dateInscription = dateInscription;
-    }
-
-    public StatutInscription getStatutInscription() {
-        return statutInscription;
-    }
-
-    public void setStatutInscription(StatutInscription statutInscription) {
-        this.statutInscription = statutInscription;
-    }
 
     @ManyToOne
     private User user;
+
+
+    @JsonBackReference
 
     @ManyToOne
     private Evenement evenement;

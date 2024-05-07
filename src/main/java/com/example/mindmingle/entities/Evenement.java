@@ -2,12 +2,30 @@ package com.example.mindmingle.entities;
 
 import jakarta.persistence.*;
 
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Table(name = "Evenement")
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+
+
 public class Evenement implements Serializable {
 
     @Id
@@ -24,63 +42,36 @@ public class Evenement implements Serializable {
     @Column(name = "dateEvent", nullable = false)
     private Date dateEvent;
 
+
+    @Enumerated(EnumType.STRING)
+    private Thematique thematique;
+
+
     @Column(name = "lieu", nullable = false)
     private String lieu;
 
-    public Evenement() {
-    }
+    @Enumerated(EnumType.STRING)
+    private TypeEvenement typeEvenement;
 
-    public Evenement(int idEvent, String titre, String description, Date dateEvent, String lieu) {
-        this.idEvent = idEvent;
-        this.titre = titre;
-        this.description = description;
-        this.dateEvent = dateEvent;
-        this.lieu = lieu;
-    }
-
-    public int getIdEvent() {
-        return idEvent;
-    }
-
-    public void setIdEvent(int idEvent) {
-        this.idEvent = idEvent;
-    }
-
-    public String getTitre() {
-        return titre;
-    }
-
-    public void setTitre(String titre) {
-        this.titre = titre;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Date getDateEvent() {
-        return dateEvent;
-    }
-
-    public void setDateEvent(Date dateEvent) {
-        this.dateEvent = dateEvent;
-    }
-
-    public String getLieu() {
-        return lieu;
-    }
-
-    public void setLieu(String lieu) {
-        this.lieu = lieu;
-    }
-
+    //@JsonManagedReference
     @ManyToOne
     private User expert;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "evenement",cascade = CascadeType.ALL)
     private Set<Inscription> inscriptions;
+
+
+    @JsonBackReference
+    @Getter
+    @ManyToOne
+    private  User user;
+    // In Evenement.java
+
+    public String getTypeEvent() {
+        return this.typeEvenement.toString();
+    }
+    @Column(name = "meetingLink")
+    private String meetingLink;
+
 }

@@ -92,6 +92,7 @@ public class Post implements Serializable {
         this.datePost = datePost;
     }
 
+
     public Integer getLikes() {
         return likes != null ? likes.intValue() : 0;
     }
@@ -107,9 +108,9 @@ public class Post implements Serializable {
         this.dislikes = dislikes;
     }
 
-
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
     private Set<Commentaire> commentaires;
+
 
     public Set<Commentaire> getCommentaires() {
         return commentaires;
@@ -119,8 +120,6 @@ public class Post implements Serializable {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    //    @ManyToOne
-//    private User user;
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private Set<UserPostReaction> reactions;
 
@@ -139,9 +138,6 @@ public class Post implements Serializable {
     public void setImage(String image) {
         this.image = image;
     }
-
-
-
 
 
 }
