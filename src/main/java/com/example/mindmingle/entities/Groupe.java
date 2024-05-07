@@ -177,11 +177,10 @@ public class Groupe implements Serializable {
     @ManyToOne
     private CategorieGroupe categorieGroupe;
 
-    @OneToMany(mappedBy = "groupe",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "groupe",cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private Set<Message> messages;
 
-    @ManyToMany(mappedBy = "groupesJoined")
-
+    @ManyToMany(mappedBy = "groupesJoined",cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private Set<User> members;
 
 
