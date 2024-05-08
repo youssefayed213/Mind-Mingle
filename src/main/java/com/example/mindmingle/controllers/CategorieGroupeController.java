@@ -6,12 +6,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin
 @RestController
 @AllArgsConstructor
 @RequestMapping("api/CatGr")
 public class CategorieGroupeController {
-    ICategorieGroupe catGrService; //injection des dépendances
+    ICategorieGroupe catGrService;
     @GetMapping("/getCatGr/{IdCatGr}")
     public CategorieGroupe getCatGr(@PathVariable ("IdCatGr") Integer IdCatGr) {
         return catGrService.retrieveCatGr(IdCatGr);

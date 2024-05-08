@@ -10,7 +10,9 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class MessageSerivceImpl implements IMessage{
+
     MessageRepository messageRepository;
+
     @Override
     public Message addMessage(Message message) {
         return messageRepository.save(message);
@@ -35,4 +37,17 @@ public class MessageSerivceImpl implements IMessage{
     public List<Message> retrieveAllMessage() {
         return messageRepository.findAll();
     }
+
+    @Override
+    public List<Message> findByGroupe_IdGroupe(int groupId) {
+        return messageRepository.findByGroupe_IdGroupe(groupId);
+    }
+
+
+
+    public List<Message> getMessagesByIdGroupe(int groupId) {
+        return messageRepository.findByGroupe_IdGroupe(groupId);
+    }
+
+
 }

@@ -1,5 +1,8 @@
 package com.example.mindmingle.entities;
 
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import org.w3c.dom.Text;
 
@@ -28,6 +31,7 @@ public class Commentaire implements Serializable {
         this.idComment = idComment;
         this.contenu = contenu;
         this.dateComment = dateComment;
+
     }
 
     public int getIdComment() {
@@ -55,6 +59,28 @@ public class Commentaire implements Serializable {
     }
 
     @ManyToOne
+    @JsonIgnore
     private Post post;
+
+
+    @ManyToOne
+    private User user; // Ajoutez cette ligne pour la relation avec l'utilisateur
+
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
 }

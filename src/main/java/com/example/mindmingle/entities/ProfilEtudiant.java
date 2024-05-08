@@ -69,6 +69,9 @@ public class ProfilEtudiant implements Serializable {
     }
     @ManyToOne
     private CategorieProfil categorieProfil;
+
+
+
     @OneToOne(mappedBy = "profilEtudiant")
     private User user;
 }

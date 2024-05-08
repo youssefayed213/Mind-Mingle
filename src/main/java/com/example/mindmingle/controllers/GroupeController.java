@@ -7,12 +7,21 @@ import com.example.mindmingle.repositories.GroupeRepository;
 import com.example.mindmingle.repositories.UserRepository;
 import com.example.mindmingle.services.IGroupe;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
+@CrossOrigin
 @RestController
 @AllArgsConstructor
 @RequestMapping("api/Groupe")
@@ -20,6 +29,8 @@ public class GroupeController {
     IGroupe groupeService; //injection des dépendances
     UserRepository userRepository;
     GroupeRepository groupeRepository;
+
+
     @GetMapping("/getGroupe/{IdGroupe}")
     public Groupe getGroupe(@PathVariable("IdGroupe") Integer IdGroupe) {
         return groupeService.retrieveGroupe(IdGroupe);
@@ -59,7 +70,29 @@ public class GroupeController {
         Groupe groupe = groupeService.deleteMemberFromGroupe(groupId, userId);
         return ResponseEntity.ok(groupe);
     }
+    @GetMapping("/{groupId}/messages")
+    public Set<Groupe.MessageInfo> retrieveGroupMessages(@PathVariable("groupId") Integer groupId) {
+        Set<Groupe.MessageInfo> messages = groupeService.retrieveGroupMessages(groupId);
+        return messages;
+    }
+    @GetMapping("/descriptions")
+    public List<Object[]> getUsersWithDescriptions() {
+        return groupeService.getUsersWithDescriptions();
+    }
+    @GetMapping("/member-count/{groupId}")
+    public int getMemberCount(@PathVariable int groupId) {
+        return groupeService.countMembers(groupId);
+    }
 
-
+    @GetMapping("/message-count/{groupId}/{date}")
+    public int getMessageCountOnDate(@PathVariable int groupId, @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return groupeService.countMessagesOnDate(groupId, date);
+    }
+    @GetMapping("/message-count-between-dates/{groupId}/{startDate}/{endDate}")
+    public int getMessageCountBetweenDates(@PathVariable int groupId,
+                                           @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                           @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        return groupeService.countMessagesBetweenDates(groupId, startDate, endDate);
+    }
 }
 

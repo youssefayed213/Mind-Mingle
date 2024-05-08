@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+
 @Entity
 @Table(name = "Post")
 public class Post implements Serializable {
@@ -23,6 +24,31 @@ public class Post implements Serializable {
 
     @Column(name = "datePost", nullable = false)
     private Date datePost;
+
+    @Column(name = "likes")
+    private Integer likes;
+
+    @Column(name = "dislikes")
+    private Integer dislikes;
+
+    @Column(name = "image")
+    private String image;
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "typePost")
+    private TypePost typePost;
+
+    public Post(String titre, String description, String typePost) {
+    }
+
+    public TypePost getTypePost() {
+        return typePost;
+    }
+
+    public void setTypePost(TypePost typePost) {
+        this.typePost = typePost;
+    }
 
     public Post() {
     }
@@ -66,10 +92,52 @@ public class Post implements Serializable {
         this.datePost = datePost;
     }
 
-    @ManyToOne
-    private User user;
+
+    public Integer getLikes() {
+        return likes != null ? likes.intValue() : 0;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public Integer getDislikes() {
+        return dislikes != null ? dislikes.intValue() : 0;
+    }
+    public void setDislikes(int dislikes) {
+        this.dislikes = dislikes;
+    }
 
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
     private Set<Commentaire> commentaires;
+
+
+    public Set<Commentaire> getCommentaires() {
+        return commentaires;
+    }
+
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private Set<UserPostReaction> reactions;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
 
 }
