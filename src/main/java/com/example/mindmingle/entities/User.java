@@ -353,7 +353,6 @@ public class User implements UserDetails, Serializable {
     @OneToMany(mappedBy = "expert",cascade = {CascadeType.ALL, CascadeType.REMOVE})
 
     private Set<RendezVous> rendezVousExpert;
-
     @OneToOne
     private ProfilEtudiant profilEtudiant;
 

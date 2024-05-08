@@ -6,15 +6,19 @@ import com.example.mindmingle.entities.Thematique;
 import com.example.mindmingle.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
 import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import java.util.List;
+
 @Repository
 public interface UserRepository extends JpaRepository<User,Integer> {
     List<User> findByDateNaiss(LocalDate date);
     User findByIdUser(Integer UserId);
+
     @Query("SELECT u.idUser, p.description FROM User u JOIN u.profilEtudiant p")
     List<Object[]> getUsersWithDescriptions();
     List<User> findByPrenomUserAndNomUser(String firstName, String lastName);
