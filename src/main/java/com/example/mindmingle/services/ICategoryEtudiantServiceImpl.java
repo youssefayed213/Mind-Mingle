@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ICategoryEtudiantServiceImpl implements ICategoryEtudiantService{
@@ -58,5 +59,10 @@ public class ICategoryEtudiantServiceImpl implements ICategoryEtudiantService{
         // Assign the Objective to the CategoryEtudiant
         objective.setCategoryEtudiant(categoryEtudiant);
         objectiveRepository.save(objective);
+    }
+
+    @Override
+    public Optional<CategoryEtudiant> retriveCategorieById(Integer idCategorie) {
+        return categoryEtudiantRepository.findById(idCategorie);
     }
 }

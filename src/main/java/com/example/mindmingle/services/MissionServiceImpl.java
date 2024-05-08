@@ -31,4 +31,8 @@ public class MissionServiceImpl implements IMissionInterface {
     public List<Mission> retrieveAllMission() {
         return missionRepository.findAll();
     }
+    @Override
+    public List<Mission> getAllMissionsByObjective(Integer idObjective) {
+        return missionRepository.findByObjective_IdObjective(idObjective);
+    }
 }

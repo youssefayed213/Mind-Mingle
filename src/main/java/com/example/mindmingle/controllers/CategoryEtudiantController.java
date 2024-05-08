@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/categories-etudiant")
@@ -48,5 +49,10 @@ public class CategoryEtudiantController {
         return ResponseEntity.ok("Objective assigned to CategoryEtudiant successfully.");
     }
 
-}
+    @CrossOrigin
+    @GetMapping("/retrieve/{idCategorie}")
+    public Optional<CategoryEtudiant> retrieveCategoryById(@PathVariable Integer idCategorie) {
+        return categoryEtudiantService.retriveCategorieById(idCategorie);
+    }
 
+}

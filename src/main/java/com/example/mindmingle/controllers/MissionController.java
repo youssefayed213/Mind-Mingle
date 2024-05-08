@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/missions")
 public class MissionController {
 
@@ -36,4 +37,7 @@ public class MissionController {
     public List<Mission> retrieveAllMission() {
         return missionService.retrieveAllMission();
     }
-}
+    @GetMapping("/getAllByObjective/{idObjective}")
+    public List<Mission> getAllMissionsByObjective(@PathVariable Integer idObjective) {
+        return missionService.getAllMissionsByObjective(idObjective);
+    }}

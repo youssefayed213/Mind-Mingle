@@ -9,4 +9,7 @@ public interface IMissionInterface {
     Mission updateMission(Mission mission);
     void removeMission(Integer idMission);
     List<Mission> retrieveAllMission();
+
+    List<Mission> getAllMissionsByObjective(Integer idObjective);
+
 }

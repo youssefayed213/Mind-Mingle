@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ObjectiveServiceImpl implements IObjectiveService{
@@ -44,5 +45,13 @@ public class ObjectiveServiceImpl implements IObjectiveService{
         mission.setObjective(objective);
         missionRepository.save(mission);
     }
-}
+    @Override
+    public List<Objective> findByCategoryEtudiant_IdCategorie(Integer idCategoryEtudiant) {
+        return objectiveRepository.findByCategoryEtudiant_IdCategorie(idCategoryEtudiant);
+    }
+    @Override
+    public Optional<Objective> retriveObjectiveById(Integer idObjective) {
+        return objectiveRepository.findById(idObjective);
+    }
 
+}
